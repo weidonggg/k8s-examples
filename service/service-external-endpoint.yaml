@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: service-external-endpoint
+  name: service-external-endpoint
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - name: http-port
+    port: 80
+    targetPort: 80
+    protocol: TCP
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  labels:
+    app: service-external-endpoint
+  # endpoint 名称必须与 Service 一致
+  name: service-external-endpoint
+  namespace: default
+subsets:
+- addresses:
+  # 一个可用的外部地址
+  - ip: 192.168.1.1
+  ports:
+  # port 名称必须与 Service 对应的 port 名称一致
+  - name: http-port
+    port: 80
+    protocol: TCP
